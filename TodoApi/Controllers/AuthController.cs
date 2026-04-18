@@ -11,21 +11,9 @@ namespace TodoApi.Controllers;
 [Route("api/[controller]")]
 public class AuthController(AppDbContext db, TokenService tokenService) : ControllerBase
 {
-    private const int MaxUsernameLength = 50;
-    private const int MaxPasswordLength = 72; // BCrypt limit
-
-    [HttpPost("register")]
+[HttpPost("register")]
     public async Task<IActionResult> Register(RegisterDto dto, CancellationToken ct)
     {
-        if (string.IsNullOrWhiteSpace(dto.Username) || string.IsNullOrWhiteSpace(dto.Password))
-            return BadRequest("Username and password are required.");
-
-        if (dto.Username.Length > MaxUsernameLength)
-            return BadRequest($"Username must be at most {MaxUsernameLength} characters.");
-
-        if (dto.Password.Length > MaxPasswordLength)
-            return BadRequest($"Password must be at most {MaxPasswordLength} characters.");
-
         if (await db.Users.AnyAsync(u => u.Username == dto.Username, ct))
             return BadRequest("Username already taken.");
 

@@ -1,3 +1,7 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace TodoApi.DTOs;
 
-public record LoginDto(string Username, string Password);
+public record LoginDto(
+    [Required] string Username,
+    [Required] string Password);

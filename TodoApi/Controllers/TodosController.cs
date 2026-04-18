@@ -29,9 +29,6 @@ public class TodosController(AppDbContext db) : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(CreateTodoDto dto, CancellationToken ct)
     {
-        if (string.IsNullOrWhiteSpace(dto.Title))
-            return BadRequest("Title is required.");
-
         var userId = CurrentUserId;
         var maxOrder = await db.TodoItems
             .Where(t => t.UserId == userId)

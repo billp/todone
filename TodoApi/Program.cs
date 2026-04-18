@@ -53,3 +53,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run("http://localhost:5050");
+
+public partial class Program { }
