@@ -32,7 +32,7 @@ cd TodoApi
 dotnet run
 ```
 
-The API starts at `http://localhost:5000`. The SQLite database (`todo.db`) is created and migrated automatically on first run.
+The API starts at `http://localhost:5050`. The SQLite database (`todo.db`) is created and migrated automatically on first run.
 
 ### 3. Run the frontend
 
@@ -45,6 +45,14 @@ ng serve
 ```
 
 The app is available at `http://localhost:4200`.
+
+## Running tests
+
+```bash
+dotnet test
+```
+
+Tests use an in-memory SQLite database — no setup required.
 
 ## Configuration
 
@@ -63,5 +71,6 @@ API settings are in `TodoApi/appsettings.json`. For production, override the JWT
 ```
 TodoApp/
 ├── TodoApi/          # .NET 10 Web API (JWT auth, SQLite, EF Core)
+├── TodoApi.Tests/    # Integration tests (xUnit, WebApplicationFactory)
 └── todo-frontend/    # Angular 21 SPA (standalone components, CDK DnD)
 ```
