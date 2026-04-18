@@ -1,0 +1,133 @@
+<div class="board-wrapper">
+  <header class="board-header">
+    <div class="logo">Todone<span class="accent">.</span></div>
+    <div class="user-bar">
+      <button class="theme-toggle" (click)="themeService.toggle()" [title]="themeService.isDark() ? 'Switch to light mode' : 'Switch to dark mode'">
+        <span class="toggle-track" [class.dark]="themeService.isDark()">
+          <span class="toggle-thumb">
+            @if (themeService.isDark()) {
+              <lucide-icon name="moon" [size]="11" [strokeWidth]="2" />
+            } @else {
+              <lucide-icon name="sun" [size]="11" [strokeWidth]="2" />
+            }
+          </span>
+        </span>
+      </button>
+      <span class="username">{{ username() }}</span>
+      <button class="btn-link" (click)="logout()">
+        <lucide-icon name="log-out" [size]="14" [strokeWidth]="2" />
+        Logout
+      </button>
+    </div>
+  </header>
+
+  <main class="board-main">
+    <div class="add-todo-row">
+      <div class="emoji-wrapper">
+        <button class="btn-emoji-icon" (click)="toggleEmojiPicker()" type="button" title="Choose icon">
+          @if (newEmoji()) {
+            <span class="emoji-icon-display">{{ newEmoji() }}</span>
+          } @else {
+            <lucide-icon name="smile-plus" [size]="18" [strokeWidth]="1.8" />
+          }
+        </button>
+        @if (showEmojiPicker()) {
+          <emoji-picker class="emoji-picker-popup emoji-picker-popup--down" (emoji-click)="onEmojiSelect($event)" />
+        }
+      </div>
+
+      <input
+        #addInput
+        class="add-input"
+        [value]="newTitle()"
+        (input)="newTitle.set($any($event).target.value)"
+        (keyup.enter)="addTodo()"
+        placeholder="Add a new task and press Enter..."
+      />
+      <button class="btn-primary" (click)="addTodo()">
+        <lucide-icon name="plus" [size]="16" [strokeWidth]="2.5" />
+        Add
+      </button>
+    </div>
+
+    <div class="columns">
+      <!-- Active Column -->
+      <div class="column">
+        <div class="column-header">
+          <lucide-icon name="circle" [size]="15" [strokeWidth]="2" class="column-icon" />
+          <h2>Active</h2>
+          <span class="badge">{{ activeTodos().length }}</span>
+        </div>
+        <div
+          cdkDropList
+          #activeList="cdkDropList"
+          id="active-list"
+          [cdkDropListData]="activeTodos()"
+          [cdkDropListConnectedTo]="[completedList]"
+          (cdkDropListDropped)="drop($event)"
+          (cdkDropListEntered)="hoveredList.set('active')"
+          (cdkDropListExited)="hoveredList.set(null)"
+          class="drop-zone"
+        >
+          @for (todo of activeTodos(); track todo.id) {
+            <app-todo-card
+              [todo]="todo"
+              [class.todo-fade-in]="fadingInId() === todo.id"
+              [class.todo-collapse]="collapsingId() === todo.id"
+              cdkDrag
+              [cdkDragData]="todo"
+              (cdkDragStarted)="onDragStarted('active')"
+              (cdkDragEnded)="onDragEnded()"
+              (deleted)="deleteTodo(todo.id, 'active')"
+              (renamed)="renameTodo(todo.id, $event, 'active')"
+              (emojiChanged)="changeEmoji(todo.id, $event, 'active')"
+              (toggled)="toggleTodo(todo.id, 'active')"
+            />
+          }
+          @if ((activeTodos().length === 0 || (activeTodos().length === 1 && dragSource() === 'active' && hoveredList() === 'completed')) && hoveredList() !== 'active') {
+            <div class="empty-state">No active tasks — add one above</div>
+          }
+        </div>
+      </div>
+
+      <!-- Completed Column -->
+      <div class="column column--completed">
+        <div class="column-header">
+          <lucide-icon name="check-circle-2" [size]="15" [strokeWidth]="2" class="column-icon column-icon--completed" />
+          <h2>Completed</h2>
+          <span class="badge badge--green">{{ completedTodos().length }}</span>
+        </div>
+        <div
+          cdkDropList
+          #completedList="cdkDropList"
+          id="completed-list"
+          [cdkDropListData]="completedTodos()"
+          [cdkDropListConnectedTo]="[activeList]"
+          (cdkDropListDropped)="drop($event)"
+          (cdkDropListEntered)="hoveredList.set('completed')"
+          (cdkDropListExited)="hoveredList.set(null)"
+          class="drop-zone drop-zone--completed"
+        >
+          @for (todo of completedTodos(); track todo.id) {
+            <app-todo-card
+              [todo]="todo"
+              [class.todo-fade-in]="fadingInId() === todo.id"
+              [class.todo-collapse]="collapsingId() === todo.id"
+              cdkDrag
+              [cdkDragData]="todo"
+              (cdkDragStarted)="onDragStarted('completed')"
+              (cdkDragEnded)="onDragEnded()"
+              (deleted)="deleteTodo(todo.id, 'completed')"
+              (renamed)="renameTodo(todo.id, $event, 'completed')"
+              (emojiChanged)="changeEmoji(todo.id, $event, 'completed')"
+              (toggled)="toggleTodo(todo.id, 'completed')"
+            />
+          }
+          @if ((completedTodos().length === 0 || (completedTodos().length === 1 && dragSource() === 'completed' && hoveredList() === 'active')) && hoveredList() !== 'completed') {
+            <div class="empty-state">Drag tasks here to mark complete</div>
+          }
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

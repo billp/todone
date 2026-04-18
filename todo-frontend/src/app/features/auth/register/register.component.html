@@ -1,0 +1,45 @@
+<div class="auth-container">
+  <div class="auth-hero">
+    <div class="hero-logo">Todone<span class="accent">.</span></div>
+    <h2 class="hero-headline">Your tasks,<br>beautifully organized.</h2>
+    <p class="hero-sub">A minimal, distraction-free workspace to capture everything you need to do — and actually get it done.</p>
+    <ul class="hero-features">
+      <li><span class="hero-dot"></span>Drag &amp; drop between Active and Completed</li>
+      <li><span class="hero-dot"></span>Personalize tasks with emoji icons</li>
+      <li><span class="hero-dot"></span>Fully private — each account sees only their own tasks</li>
+      <li><span class="hero-dot"></span>Works great in dark mode</li>
+    </ul>
+  </div>
+
+  <div class="auth-card">
+    <h1>Get started</h1>
+    <p class="subtitle">Create your account</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label for="username">Username</label>
+        <input id="username" type="text" formControlName="username" placeholder="Choose a username" autocomplete="username" />
+        @if (form.controls.username.invalid && form.controls.username.touched) {
+          <span class="field-error">At least 3 characters required</span>
+        }
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" type="password" formControlName="password" placeholder="Choose a password" autocomplete="new-password" />
+        @if (form.controls.password.invalid && form.controls.password.touched) {
+          <span class="field-error">At least 6 characters required</span>
+        }
+      </div>
+
+      @if (error()) {
+        <div class="error-msg">{{ error() }}</div>
+      }
+
+      <button type="submit" class="btn-primary" [disabled]="loading()">
+        {{ loading() ? 'Creating account...' : 'Create account' }}
+      </button>
+    </form>
+
+    <p class="auth-link">Already have an account? <a routerLink="/login">Sign in</a></p>
+  </div>
+</div>

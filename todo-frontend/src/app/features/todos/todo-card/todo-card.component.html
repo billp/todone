@@ -1,0 +1,53 @@
+<div class="todo-card" [class.completed]="todo().isCompleted">
+  <button
+    class="todo-checkbox"
+    type="button"
+    (click)="toggled.emit(); $event.stopPropagation()"
+    [attr.aria-label]="todo().isCompleted ? 'Mark as active' : 'Mark as complete'">
+    <lucide-icon name="check" [size]="10" [strokeWidth]="2.5" />
+  </button>
+
+  <div class="todo-emoji-btn" (click)="toggleEmojiPicker($event)" title="Change icon">
+    @if (todo().emoji) {
+      <span class="emoji-icon-display">{{ todo().emoji }}</span>
+    } @else {
+      <span class="emoji-placeholder">
+        <lucide-icon name="smile" [size]="20" [strokeWidth]="1.8" />
+      </span>
+    }
+    @if (showEmojiPicker()) {
+      <emoji-picker
+        [class]="pickerOpensDown() ? 'emoji-picker-popup emoji-picker-popup--down' : 'emoji-picker-popup emoji-picker-popup--up'"
+        (emoji-click)="onEmojiSelect($event)" />
+    }
+  </div>
+
+  @if (editing()) {
+    <input
+      #editInput
+      class="edit-input"
+      [(ngModel)]="editTitle"
+      (keyup.enter)="saveEdit()"
+      (keyup.escape)="cancelEdit()"
+      (blur)="cancelEdit()"
+      autofocus
+    />
+  } @else {
+    <span class="todo-title" (dblclick)="startEdit()">{{ todo().title }}</span>
+  }
+
+  <div class="todo-actions">
+    @if (!editing()) {
+      <button class="btn-icon" (click)="startEdit()" title="Rename">
+        <lucide-icon name="pencil" [size]="14" [strokeWidth]="2" />
+      </button>
+    } @else {
+      <button class="btn-icon btn-save" (mousedown)="$event.preventDefault(); saveEdit()" title="Save">
+        <lucide-icon name="check" [size]="14" [strokeWidth]="2.5" />
+      </button>
+    }
+    <button class="btn-icon btn-delete" (click)="deleted.emit()" title="Delete">
+      <lucide-icon name="trash-2" [size]="14" [strokeWidth]="2" />
+    </button>
+  </div>
+</div>
