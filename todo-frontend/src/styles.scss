@@ -638,7 +638,7 @@ body {
 
 .todo-collapse {
   pointer-events: none;
-  animation: todoCollapseHeight .4s ease-in forwards;
+  animation: todoCollapseHeight .25s ease-in forwards;
 }
 
 @keyframes todoExpandHeight {

@@ -151,7 +151,7 @@ export class TodoBoardComponent implements OnInit {
   toggleTodo(id: number, which: 'active' | 'completed'): void {
     if (this.collapsingId() !== null) return;
     this.collapsingId.set(id);
-    setTimeout(() => this.performToggle(id, which), 420);
+    setTimeout(() => this.performToggle(id, which), 270);
   }
 
   private performToggle(id: number, which: 'active' | 'completed'): void {
